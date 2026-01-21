@@ -1,0 +1,192 @@
+{-# START_FILE package.yaml #-}
+# cspell: disable
+name:                {{name}}
+author:              "{{author-name}}{{^author-name}}Author name here{{/author-name}}"
+
+extra-source-files:
+- README.md
+- CHANGELOG.md
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README file
+
+dependencies:
+- base >= 4.7 && < 5
+
+ghc-options:
+- -Wall
+- -Wcompat
+- -Widentities
+- -Wincomplete-record-updates
+- -Wincomplete-uni-patterns
+- -Wmissing-export-lists
+- -Wmissing-home-modules
+- -Wpartial-fields
+- -Wredundant-constraints
+
+library:
+  source-dirs: src
+
+executables:
+  {{name}}-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - {{name}}
+
+tests:
+  {{name}}-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - {{name}}
+
+{-# START_FILE test/Spec.hs #-}
+main :: IO ()
+main = putStrLn "Test suite not yet implemented"
+
+{-# START_FILE src/Lib.hs #-}
+module Lib
+    ( someFunc
+    ) where
+
+someFunc :: IO ()
+someFunc = putStrLn "someFunc"
+
+{-# START_FILE app/Main.hs #-}
+module Main (main) where
+
+import Lib
+
+main :: IO ()
+main = someFunc
+
+{-# START_FILE README.md #-}
+# {{name}}
+
+Commands:
+
+- **Test:** `stack test`
+- **Run:** `stack run`
+- **Build:** `stack build`
+
+{-# START_FILE .gitignore #-}
+.stack-work/
+.stack-work/
+*~
+.vscode/phoityne.log
+
+{-# START_FILE .hlint.yaml #-}
+- ignore: { name: "Eta reduce" }
+
+{-# START_FILE .vscode/launch.json #-}
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "ghc",
+      "request": "launch",
+      "name": "haskell(stack)",
+      "internalConsoleOptions": "openOnSessionStart",
+      "workspace": "${workspaceFolder}",
+      "startup": "${workspaceFolder}/app/Main.hs",
+      "startupFunc": "",
+      "startupArgs": "",
+      "stopOnEntry": false,
+      "mainArgs": "",
+      "ghciPrompt": "H>>= ",
+      "ghciInitialPrompt": "> ",
+      "ghciCmd": "stack ghci --with-ghc=ghci-dap --test --no-load --no-build --main-is TARGET",
+      "ghciEnv": {},
+      "logFile": "${workspaceFolder}/.vscode/phoityne.log",
+      "logLevel": "WARNING",
+      "forceInspect": true
+    }
+  ]
+}
+
+{-# START_FILE .vscode/settings.json #-}
+{
+  "haskell.manageHLS": "PATH",
+  "haskell.ghcupExecutablePath": "",
+  "haskell.formattingProvider": "fourmolu",
+  "cSpell.words": [
+    "cmdargs",
+    "ghci",
+    "ghcup",
+    "HLINT",
+    "hspec",
+    "phoityne",
+    "odir",
+    "unrecognised",
+    "yytext",
+  ],
+  "haskellRun.defaultRunner": "stack runghc",
+  "haskellRun.telemetry.enabled": false,
+}
+
+{-# START_FILE .vscode/tasks.json #-}
+
+{
+  // Automatically created by phoityne-vscode extension.
+
+  "version": "2.0.0",
+  "presentation": {
+    "reveal": "always",
+    "panel": "new"
+  },
+  "tasks": [
+    {
+      // F7
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "label": "haskell build",
+      "type": "shell",
+      //"command": "cabal configure && cabal build"
+      "command": "stack build"
+    },
+    {
+      // F6
+      "group": "build",
+      "type": "shell",
+      "label": "haskell clean & build",
+      //"command": "cabal clean && cabal configure && cabal build"
+      "command": "stack clean && stack build"
+      //"command": "stack clean ; stack build"  // for powershell
+    },
+    {
+      // F8
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "type": "shell",
+      "label": "haskell test",
+      //"command": "cabal test"
+      "command": "stack test"
+    },
+    {
+      // F6
+      "isBackground": true,
+      "type": "shell",
+      "label": "haskell watch",
+      "command": "stack build --test --no-run-tests --file-watch"
+    }
+  ]
+}
+*~
