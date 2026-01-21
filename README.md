@@ -11,4 +11,4 @@ stack config set install-ghc false
 
 ## Templates
 
-- [cs132-simple](./cs132-simple.hsfiles): A simple project, based on `stack new`
+- [simple](./simple.hsfiles): A simple project, based on `stack new`
