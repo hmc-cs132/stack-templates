@@ -679,5 +679,3 @@ newline: native
 #
 # Default: true
 cabal: true
-
-*~
