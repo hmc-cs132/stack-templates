@@ -68,9 +68,11 @@ someFunc :: IO ()
 someFunc = putStrLn "someFunc"
 
 {-# START_FILE app/Main.hs #-}
-module Main (main) where
+module Main
+    ( main
+    ) where
 
-import Lib
+import           Lib (someFunc)
 
 main :: IO ()
 main = someFunc
@@ -87,7 +89,6 @@ Commands:
 {-# START_FILE .gitignore #-}
 .stack-work/
 .stack-work/
-*~
 .vscode/phoityne.log
 
 {-# START_FILE .hlint.yaml #-}
@@ -678,4 +679,5 @@ newline: native
 #
 # Default: true
 cabal: true
+
 *~
