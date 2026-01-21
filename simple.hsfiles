@@ -137,7 +137,9 @@ Commands:
     "odir",
     "phoityne",
     "unrecognised",
-    "yytext"
+    "yytext",
+    "Stackage",
+    "subdirs"
   ],
   "haskellRun.defaultRunner": "stack runghc",
   "haskellRun.telemetry.enabled": false,
