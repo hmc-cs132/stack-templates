@@ -58,8 +58,8 @@ tests:
     - QuickCheck
 
 {-# START_FILE test/Spec.hs #-}
-main :: IO ()
-main = putStrLn "Test suite not yet implemented"
+{-# OPTIONS_GHC -F -pgmF hspec-discover #-}
+
 
 {-# START_FILE src/Lib.hs #-}
 module Lib
@@ -127,9 +127,9 @@ Commands:
 
 {-# START_FILE .vscode/settings.json #-}
 {
-  "haskell.manageHLS": "PATH",
-  "haskell.ghcupExecutablePath": "",
+  "haskell.manageHLS": "GHCup",
   "haskell.formattingProvider": "stylish-haskell",
+  "editor.formatOnSave": true,
   "cSpell.words": [
     "cmdargs",
     "ghci",
@@ -143,9 +143,6 @@ Commands:
     "Stackage",
     "subdirs"
   ],
-  "haskellRun.defaultRunner": "stack runghc",
-  "haskellRun.telemetry.enabled": false,
-  "editor.formatOnSave": true,
 }
 
 {-# START_FILE .vscode/tasks.json #-}
@@ -199,6 +196,16 @@ Commands:
     }
   ]
 }
+
+{-# START_FILE stack.yaml #-}
+snapshot: lts-22.44
+
+packages:
+  - .
+
+system-ghc: true
+install-ghc: false
+skip-ghc-check: true
 
 {-# START_FILE .stylish-haskell.yaml #-}
 #cspell: disable
