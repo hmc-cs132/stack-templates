@@ -197,15 +197,6 @@ Commands:
   ]
 }
 
-{-# START_FILE stack.yaml #-}
-snapshot: lts-22.44
-
-packages:
-  - .
-
-system-ghc: true
-install-ghc: false
-skip-ghc-check: true
 
 {-# START_FILE .stylish-haskell.yaml #-}
 #cspell: disable
