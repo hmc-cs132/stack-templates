@@ -1,3 +1,16 @@
+{-# START_FILE hie.yaml #-}
+cradle:
+  stack:
+    - path: "./src"
+      component: "{{name}}:lib"
+
+    - path: "./app"
+      component: "{{name}}:exe:{{name}}-exe"
+
+    - path: "./test"
+      component: "{{name}}:test:{{name}}-test"
+
+
 {-# START_FILE package.yaml #-}
 # cspell: disable
 name:                {{name}}
@@ -24,8 +37,6 @@ ghc-options:
   - -Wincomplete-record-updates
   - -Wmissing-export-lists
   - -Wpartial-fields
-  - -Wmissing-deriving-strategies
-  - -Wmissing-home-modules
   - -Wredundant-constraints
   - -fhide-source-paths
   - -freverse-errors
@@ -90,11 +101,24 @@ Commands:
 
 {-# START_FILE .gitignore #-}
 .stack-work/
-.stack-work/
 .vscode/phoityne.log
 
 {-# START_FILE .hlint.yaml #-}
 - ignore: { name: "Eta reduce" }
+
+{-# START_FILE .devcontainer/devcontainer.json #-}
+{
+  "name": "Haskell Development Container",
+  "image": "harveymudd/cs132:2026",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "haskell.haskell",
+        "justusadam.language-haskell"
+      ]
+    }
+  }
+}
 
 {-# START_FILE .vscode/launch.json #-}
 {
@@ -164,7 +188,6 @@ Commands:
       },
       "label": "haskell build",
       "type": "shell",
-      //"command": "cabal configure && cabal build"
       "command": "stack build"
     },
     {
@@ -172,9 +195,7 @@ Commands:
       "group": "build",
       "type": "shell",
       "label": "haskell clean & build",
-      //"command": "cabal clean && cabal configure && cabal build"
       "command": "stack clean && stack build"
-      //"command": "stack clean ; stack build"  // for powershell
     },
     {
       // F8
