@@ -591,15 +591,6 @@ cabal: true
 }
 
 
-{-# START_FILE README.md #-}
-# HMC -- Human-Made Compiler
-
-## Commands
-
-- **Test:** `stack test`
-- **Run:** `stack run`
-- **Build:** `stack build`
-
 {-# START_FILE app/Main.hs #-}
 {- |
 Module       : Main
