@@ -640,8 +640,8 @@ main = do
     -- Print the result of the compilation
     case result of
         Left errMsg -> putStrLn $ "Compilation failed: " ++ errMsg
-        Right _ -> do
-            putStrLn "Compilation succeeded!"
+        Right (output, _) -> do
+            putStrLn output
 
 {-# START_FILE hie.yaml #-}
 cradle:
@@ -960,8 +960,8 @@ buildContext opts =
 -- The result of the compiler
 -----------------------------------------------------------------------------------------
 
--- | This compiler produces no value. Instead, it creates files.
-type CompilerResult = ()
+-- | The result of the compiler
+type CompilerResult = String
 
 -----------------------------------------------------------------------------------------
 -- State (writeable)
