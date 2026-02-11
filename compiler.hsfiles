@@ -1,0 +1,1298 @@
+{-# START_FILE .gitignore #-}
+.stack-work/
+.vscode/phoityne.log
+.DS_Store
+**/*.o
+**/*.s
+
+{-# START_FILE .hlint.yaml #-}
+- ignore: { name: "Eta reduce" }
+
+{-# START_FILE .stylish-haskell.yaml #-}
+#cspell: disable
+# stylish-haskell configuration file
+# ==================================
+
+# The stylish-haskell tool is mainly configured by specifying steps. These steps
+# are a list, so they have an order, and one specific step may appear more than
+# once (if needed). Each file is processed by these steps in the given order.
+steps:
+  # Convert some ASCII sequences to their Unicode equivalents. This is disabled
+  # by default.
+  # - unicode_syntax:
+  #     # In order to make this work, we also need to insert the UnicodeSyntax
+  #     # language pragma. If this flag is set to true, we insert it when it's
+  #     # not already present. You may want to disable it if you configure
+  #     # language extensions using some other method than pragmas. Default:
+  #     # true.
+  #     add_language_pragma: true
+
+  # Format module header
+  #
+  # Currently, this option is not configurable and will format all exports and
+  # module declarations to minimize diffs
+  #
+  - module_header:
+      #     # How many spaces use for indentation in the module header.
+      #     indent: 4
+      #
+      #     # Should export lists be sorted?  Sorting is only performed within the
+      #     # export section, as delineated by Haddock comments.
+      sort: true
+      #
+      #     # See `separate_lists` for the `imports` step.
+      #     separate_lists: true
+      #
+      #     # When to break the "where".
+      #     # Possible values:
+      #     # - exports: only break when there is an explicit export list.
+      #     # - single: only break when the export list counts more than one export.
+      #     # - inline: only break when the export list is too long. This is
+      #     #   determined by the `columns` setting. Not applicable when the export
+      #     #   list contains comments as newlines will be required.
+      #     # - always: always break before the "where".
+      break_where: exports
+  #
+  #     # Where to put open bracket
+  #     # Possible values:
+  #     # - same_line: put open bracket on the same line as the module name, before the
+  #     #              comment of the module
+  #     # - next_line: put open bracket on the next line, after module comment
+  #     open_bracket: next_line
+
+  # Format record definitions. This is disabled by default.
+  #
+  # You can control the layout of record fields. The only rules that can't be configured
+  # are these:
+  #
+  # - "|" is always aligned with "="
+  # - "," in fields is always aligned with "{"
+  # - "}" is likewise always aligned with "{"
+  #
+  - records:
+      #     # How to format equals sign between type constructor and data constructor.
+      #     # Possible values:
+      #     # - "same_line" -- leave "=" AND data constructor on the same line as the type constructor.
+      #     # - "indent N" -- insert a new line and N spaces from the beginning of the next line.
+      equals: "indent 2"
+      #
+      #     # How to format first field of each record constructor.
+      #     # Possible values:
+      #     # - "same_line" -- "{" and first field goes on the same line as the data constructor.
+      #     # - "indent N" -- insert a new line and N spaces from the beginning of the data constructor
+      first_field: "indent 2"
+      #
+      #     # How many spaces to insert between the column with "," and the beginning of the comment in the next line.
+      field_comment: 2
+      #
+      #     # How many spaces to insert before "deriving" clause. Deriving clauses are always on separate lines.
+      deriving: 2
+      #
+      #     # How many spaces to insert before "via" clause counted from indentation of deriving clause
+      #     # Possible values:
+      #     # - "same_line" -- "via" part goes on the same line as "deriving" keyword.
+      #     # - "indent N" -- insert a new line and N spaces from the beginning of "deriving" keyword.
+      via: "indent 2"
+      #
+      #     # Sort typeclass names in the "deriving" list alphabetically.
+      sort_deriving: true
+  #
+  #     # Whether or not to break enums onto several lines
+  #     #
+  #     # Default: false
+  #     break_enums: false
+  #
+  #     # Whether or not to break single constructor data types before `=` sign
+  #     #
+  #     # Default: true
+  #     break_single_constructors: true
+  #
+  #     # Whether or not to curry constraints on function.
+  #     #
+  #     # E.g: @allValues :: Enum a => Bounded a => Proxy a -> [a]@
+  #     #
+  #     # Instead of @allValues :: (Enum a, Bounded a) => Proxy a -> [a]@
+  #     #
+  #     # Default: false
+  #     curried_context: false
+
+  # Align the right hand side of some elements.  This is quite conservative
+  # and only applies to statements where each element occupies a single
+  # line.
+  # Possible values:
+  # - always - Always align statements.
+  # - adjacent - Align statements that are on adjacent lines in groups.
+  # - never - Never align statements.
+  # All default to always.
+  - simple_align:
+      cases: always
+      top_level_patterns: always
+      records: always
+      multi_way_if: always
+
+  # Import cleanup
+  - imports:
+      # There are different ways we can align names and lists.
+      #
+      # - global: Align the import names and import list throughout the entire
+      #   file.
+      #
+      # - file: Like global, but don't add padding when there are no qualified
+      #   imports in the file.
+      #
+      # - group: Only align the imports per group (a group is formed by adjacent
+      #   import lines).
+      #
+      # - none: Do not perform any alignment.
+      #
+      # Default: global.
+      align: global
+
+      # The following options affect only import list alignment.
+      #
+      # List align has following options:
+      #
+      # - after_alias: Import list is aligned with end of import including
+      #   'as' and 'hiding' keywords.
+      #
+      #   > import qualified Data.List      as List (concat, foldl, foldr, head,
+      #   >                                          init, last, length)
+      #
+      # - with_alias: Import list is aligned with start of alias or hiding.
+      #
+      #   > import qualified Data.List      as List (concat, foldl, foldr, head,
+      #   >                                 init, last, length)
+      #
+      # - with_module_name: Import list is aligned `list_padding` spaces after
+      #   the module name.
+      #
+      #   > import qualified Data.List      as List (concat, foldl, foldr, head,
+      #                          init, last, length)
+      #
+      #   This is mainly intended for use with `pad_module_names: false`.
+      #
+      #   > import qualified Data.List as List (concat, foldl, foldr, head,
+      #                          init, last, length, scanl, scanr, take, drop,
+      #                          sort, nub)
+      #
+      # - new_line: Import list starts always on new line.
+      #
+      #   > import qualified Data.List      as List
+      #   >     (concat, foldl, foldr, head, init, last, length)
+      #
+      # - repeat: Repeat the module name to align the import list.
+      #
+      #   > import qualified Data.List      as List (concat, foldl, foldr, head)
+      #   > import qualified Data.List      as List (init, last, length)
+      #
+      # Default: after_alias
+      list_align: after_alias
+
+      # Right-pad the module names to align imports in a group:
+      #
+      # - true: a little more readable
+      #
+      #   > import qualified Data.List       as List (concat, foldl, foldr,
+      #   >                                           init, last, length)
+      #   > import qualified Data.List.Extra as List (concat, foldl, foldr,
+      #   >                                           init, last, length)
+      #
+      # - false: diff-safe
+      #
+      #   > import qualified Data.List as List (concat, foldl, foldr, init,
+      #   >                                     last, length)
+      #   > import qualified Data.List.Extra as List (concat, foldl, foldr,
+      #   >                                           init, last, length)
+      #
+      # Default: true
+      pad_module_names: true
+
+      # Long list align style takes effect when import is too long. This is
+      # determined by 'columns' setting.
+      #
+      # - inline: This option will put as much specs on same line as possible.
+      #
+      # - new_line: Import list will start on new line.
+      #
+      # - new_line_multiline: Import list will start on new line when it's
+      #   short enough to fit to single line. Otherwise it'll be multiline.
+      #
+      # - multiline: One line per import list entry.
+      #   Type with constructor list acts like single import.
+      #
+      #   > import qualified Data.Map as M
+      #   >     ( empty
+      #   >     , singleton
+      #   >     , ...
+      #   >     , delete
+      #   >     )
+      #
+      # Default: inline
+      long_list_align: inline
+
+      # Align empty list (importing instances)
+      #
+      # Empty list align has following options
+      #
+      # - inherit: inherit list_align setting
+      #
+      # - right_after: () is right after the module name:
+      #
+      #   > import Vector.Instances ()
+      #
+      # Default: inherit
+      empty_list_align: inherit
+
+      # List padding determines indentation of import list on lines after import.
+      # This option affects 'long_list_align'.
+      #
+      # - <integer>: constant value
+      #
+      # - module_name: align under start of module name.
+      #   Useful for 'file' and 'group' align settings.
+      #
+      # Default: 4
+      list_padding: 4
+
+      # Separate lists option affects formatting of import list for type
+      # or class. The only difference is single space between type and list
+      # of constructors, selectors and class functions.
+      #
+      # - true: There is single space between Foldable type and list of it's
+      #   functions.
+      #
+      #   > import Data.Foldable (Foldable (fold, foldl, foldMap))
+      #
+      # - false: There is no space between Foldable type and list of it's
+      #   functions.
+      #
+      #   > import Data.Foldable (Foldable(fold, foldl, foldMap))
+      #
+      # Default: true
+      separate_lists: true
+
+      # Space surround option affects formatting of import lists on a single
+      # line. The only difference is single space after the initial
+      # parenthesis and a single space before the terminal parenthesis.
+      #
+      # - true: There is single space associated with the enclosing
+      #   parenthesis.
+      #
+      #   > import Data.Foo ( foo )
+      #
+      # - false: There is no space associated with the enclosing parenthesis
+      #
+      #   > import Data.Foo (foo)
+      #
+      # Default: false
+      space_surround: false
+
+      # Post qualify option moves any qualifies found in import declarations
+      # to the end of the declaration. This also adjust padding for any
+      # unqualified import declarations.
+      #
+      # - true: Qualified as <module name> is moved to the end of the
+      #   declaration.
+      #
+      #   > import Data.Bar
+      #   > import Data.Foo qualified as F
+      #
+      # - false: Qualified remains in the default location and unqualified
+      #   imports are padded to align with qualified imports.
+      #
+      #   > import           Data.Bar
+      #   > import qualified Data.Foo as F
+      #
+      # Default: false
+      post_qualify: false
+
+      # Automatically group imports based on their module names, with
+      # a blank line separating each group. Groups are ordered in
+      # alphabetical order.
+      #
+      # By default, this groups by the first part of each module's
+      # name (Control.* will be grouped together, Data.*... etc), but
+      # this can be configured with the group_patterns setting.
+      #
+      # When enabled, this rewrites existing blank lines and groups.
+      #
+      # - true: Group imports by the first part of the module name.
+      #
+      #   > import Control.Applicative
+      #   > import Control.Monad
+      #   > import Control.Monad.MonadError
+      #   >
+      #   > import Data.Functor
+      #
+      # - false: Keep import groups as-is (still sorting and
+      #   formatting the imports within each group)
+      #
+      #   > import Control.Monad
+      #   > import Data.Functor
+      #   >
+      #   > import Control.Applicative
+      #   > import Control.Monad.MonadError
+      #
+      # Default: false
+      group_imports: true
+
+      # A list of rules specifying how to group modules and how to
+      # order the groups.
+      #
+      # Each rule has a match field; the rule only applies to module
+      # names matched by this pattern. Patterns are POSIX extended
+      # regular expressions; see the documentation of Text.Regex.TDFA
+      # for details:
+      # https://hackage.haskell.org/package/regex-tdfa-1.3.1.2/docs/Text-Regex-TDFA.html
+      #
+      # Rules are processed in order, so only the *first* rule that
+      # matches a specific module will apply. Any module names that do
+      # not match a single rule will be put into a single group at the
+      # end of the import block.
+      #
+      # Example: group MyApp modules first, with everything else in
+      # one group at the end.
+      #
+      #  group_rules:
+      #    - match: "^MyApp\\>"
+      #
+      #  > import MyApp
+      #  > import MyApp.Foo
+      #  >
+      #  > import Control.Monad
+      #  > import MyApps
+      #  > import Test.MyApp
+      #
+      # A rule can also optionally have a sub_group pattern. Imports
+      # that match the rule will be broken up into further groups by
+      # the part of the module name matched by the sub_group pattern.
+      #
+      # Example: group MyApp modules first, then everything else
+      # sub-grouped by the first part of the module name.
+      #
+      #  group_rules:
+      #    - match: "^MyApp\\>"
+      #    - match: "."
+      #      sub_group: "^[^.]+"
+      #
+      #  > import MyApp
+      #  > import MyApp.Foo
+      #  >
+      #  > import Control.Applicative
+      #  > import Control.Monad
+      #  >
+      #  > import Data.Map
+      #
+      # A pattern only needs to match part of the module name, which
+      # could be in the middle. You can use ^pattern to anchor to the
+      # beginning of the module name, pattern$ to anchor to the end
+      # and ^pattern$ to force a full match. Example:
+      #
+      #  - "Test\\." would match "Test.Foo" and "Foo.Test.Lib"
+      #  - "^Test\\." would match "Test.Foo" but not "Foo.Test.Lib"
+      #  - "\\.Test$" would match "Foo.Test" but not "Foo.Test.Lib"
+      #  - "^Test$" would *only* match "Test"
+      #
+      # You can use \\< and \\> to anchor against the beginning and
+      # end of words, respectively. For example:
+      #
+      #  - "^Test\\." would match "Test.Foo" but not "Test" or "Tests"
+      #  - "^Test\\>" would match "Test.Foo" and "Test", but not
+      #    "Tests"
+      #
+      # The default is a single rule that matches everything and
+      # sub-groups based on the first component of the module name.
+      #
+      # Default: [{ "match" : ".*", "sub_group": "^[^.]+" }]
+      group_rules:
+        - match: ".*"
+          sub_group: "^[^.]+"
+
+  # Language pragmas
+  - language_pragmas:
+      # We can generate different styles of language pragma lists.
+      #
+      # - vertical: Vertical-spaced language pragmas, one per line.
+      #
+      # - compact: A more compact style.
+      #
+      # - compact_line: Similar to compact, but wrap each line with
+      #   `{-# LANGUAGE #-}'.
+      #
+      # - vertical_compact: Similar to vertical, but use only one language pragma.
+      #
+      # Default: vertical.
+      style: vertical
+
+      # Align affects alignment of closing pragma brackets.
+      #
+      # - true: Brackets are aligned in same column.
+      #
+      # - false: Brackets are not aligned together. There is only one space
+      #   between actual import and closing bracket.
+      #
+      # Default: true
+      align: true
+
+      # stylish-haskell can detect redundancy of some language pragmas. If this
+      # is set to true, it will remove those redundant pragmas. Default: true.
+      remove_redundant: true
+
+      # Language prefix to be used for pragma declaration, this allows you to
+      # use other options non case-sensitive like "language" or "Language".
+      # If a non correct String is provided, it will default to: LANGUAGE.
+      language_prefix: LANGUAGE
+
+  # Replace tabs by spaces. This is disabled by default.
+  - tabs:
+      #     # Number of spaces to use for each tab. Default: 8, as specified by the
+      #     # Haskell report.
+      spaces: 2
+
+  # Remove trailing whitespace
+  - trailing_whitespace: {}
+
+  # Squash multiple spaces between the left and right hand sides of some
+  # elements into single spaces. Basically, this undoes the effect of
+  # simple_align but is a bit less conservative.
+  # - squash: {}
+
+# A common setting is the number of columns (parts of) code will be wrapped
+# to. Different steps take this into account.
+#
+# Set this to null to disable all line wrapping.
+#
+# Default: 80.
+columns: 90
+
+# By default, line endings are converted according to the OS. You can override
+# preferred format here.
+#
+# - native: Native newline format. CRLF on Windows, LF on other OSes.
+#
+# - lf: Convert to LF ("\n").
+#
+# - crlf: Convert to CRLF ("\r\n").
+#
+# Default: native.
+newline: native
+
+# Sometimes, language extensions are specified in a cabal file or from the
+# command line instead of using language pragmas in the file. stylish-haskell
+# needs to be aware of these, so it can parse the file correctly.
+#
+# No language extensions are enabled by default.
+# language_extensions:
+# - TemplateHaskell
+# - QuasiQuotes
+
+# Attempt to find the cabal file in ancestors of the current directory, and
+# parse options (currently only language extensions) from that.
+#
+# Default: true
+cabal: true
+{-# START_FILE .vscode/launch.json #-}
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "ghc",
+      "request": "launch",
+      "name": "haskell(stack)",
+      "internalConsoleOptions": "openOnSessionStart",
+      "workspace": "${workspaceFolder}",
+      "startup": "${workspaceFolder}/app/Main.hs",
+      "startupFunc": "",
+      "startupArgs": "",
+      "stopOnEntry": false,
+      "mainArgs": "",
+      "ghciPrompt": "H>>= ",
+      "ghciInitialPrompt": "> ",
+      "ghciCmd": "stack ghci --with-ghc=ghci-dap --test --no-load --no-build --main-is TARGET",
+      "ghciEnv": {},
+      "logFile": "${workspaceFolder}/.vscode/phoityne.log",
+      "logLevel": "WARNING",
+      "forceInspect": true
+    }
+  ]
+}
+
+{-# START_FILE .vscode/settings.json #-}
+{
+  "haskell.manageHLS": "GHCup",
+  "haskell.formattingProvider": "stylish-haskell",
+  "editor.formatOnSave": true,
+  "cSpell.words": [
+    "cmdargs",
+    "ghci",
+    "ghcup",
+    "HLINT",
+    "hspec",
+    "odir",
+    "phoityne",
+    "RWST",
+    "Stackage",
+    "subdirs",
+    "tokentype",
+    "unrecognised",
+    "yytext"
+  ],
+}
+{-# START_FILE .vscode/tasks.json #-}
+
+{
+  // Automatically created by phoityne-vscode extension.
+
+  "version": "2.0.0",
+  "presentation": {
+    "reveal": "always",
+    "panel": "new"
+  },
+  "tasks": [
+    {
+      // F7
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "label": "haskell build",
+      "type": "shell",
+      "command": "stack build"
+    },
+    {
+      // F6
+      "group": "build",
+      "type": "shell",
+      "label": "haskell clean & build",
+      "command": "stack clean && stack build"
+    },
+    {
+      // F8
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "type": "shell",
+      "label": "haskell test",
+      //"command": "cabal test"
+      "command": "stack test"
+    },
+    {
+      // F6
+      "isBackground": true,
+      "type": "shell",
+      "label": "haskell watch",
+      "command": "stack build --test --no-run-tests --file-watch"
+    }
+  ]
+}
+
+
+{-# START_FILE README.md #-}
+# HMC -- Human-Made Compiler
+
+## Commands
+
+- **Test:** `stack test`
+- **Run:** `stack run`
+- **Build:** `stack build`
+
+{-# START_FILE app/Main.hs #-}
+
+{- |
+Module       : Main
+Description  : The main program for the compiler: takes command-line args and runs the compiler
+-}
+module Main
+    ( main
+    ) where
+
+import           Args                   (Options (..), options)
+
+import           CompilerMonad          (runCompilerM)
+
+import           CompilerTypes          (buildContext, defaultCompilerState)
+
+import           Control.Monad          (unless)
+
+import           Phases                 (phases)
+
+import           System.Console.CmdArgs (cmdArgs)
+
+
+main :: IO ()
+main = do
+    -- Get command line options
+    opts <- cmdArgs options
+
+    -- Get the expression and build compiler context from options
+    let context = buildContext opts
+
+    -- Run the compiler monad with the given context
+    (result, finalLog) <- runCompilerM context defaultCompilerState phases (input opts)
+
+    -- Output the final log
+    unless (null finalLog) $
+        print finalLog
+
+    -- Print the result of the compilation
+    case result of
+        Left errMsg -> putStrLn $ "Compilation failed: " ++ errMsg
+        Right _ -> do
+            putStrLn "Compilation succeeded!"
+
+{-# START_FILE hie.yaml #-}
+cradle:
+  stack:
+    - path: "./src"
+      component: "{{name}}:lib"
+
+    - path: "./app"
+      component: "{{name}}:exe:{{name}}-exe"
+
+    - path: "./test"
+      component: "{{name}}:test:{{name}}-test"
+
+{-# START_FILE {{name}}.cabal #-}
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.38.1.
+--
+-- see: https://github.com/sol/hpack
+
+name:           {{name}}
+version:        0.0.0
+description:    Please see the README file
+author:         Author name here
+maintainer:     Author name here
+build-type:     Simple
+extra-source-files:
+    README.md
+
+library
+  exposed-modules:
+      Args
+      AST
+      CompilerMonad
+      CompilerTypes
+      Lexer
+      Optimizer
+      Parser
+      Phases
+      Tokens
+  hs-source-dirs:
+      src
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-uni-patterns -Wincomplete-record-updates -Wmissing-export-lists -Wpartial-fields -Wredundant-constraints -fhide-source-paths -freverse-errors
+  build-tools:
+      alex
+    , happy
+  build-depends:
+      array
+    , base >=4.7 && <5
+    , cmdargs
+    , containers
+    , mtl
+    , process
+  default-language: Haskell2010
+
+executable {{name}}-exe
+  main-is: Main.hs
+  hs-source-dirs:
+      app
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-uni-patterns -Wincomplete-record-updates -Wmissing-export-lists -Wpartial-fields -Wredundant-constraints -fhide-source-paths -freverse-errors -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , cmdargs
+    , containers
+    , {{name}}
+    , mtl
+    , process
+  default-language: Haskell2010
+
+test-suite {{name}}-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      ParserSpec
+      TokenSpec
+  hs-source-dirs:
+      test
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-uni-patterns -Wincomplete-record-updates -Wmissing-export-lists -Wpartial-fields -Wredundant-constraints -fhide-source-paths -freverse-errors -threaded -rtsopts -with-rtsopts=-N
+  build-tool-depends:
+      hspec-discover:hspec-discover
+  build-depends:
+      QuickCheck
+    , base >=4.7 && <5
+    , cmdargs
+    , containers
+    , hspec
+    , {{name}}
+    , mtl
+    , process
+  default-language: Haskell2010
+
+{-# START_FILE package.yaml #-}
+# cspell: disable
+name: {{name}}
+author: "Author name here"
+
+extra-source-files:
+  - README.md
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description: Please see the README file
+
+dependencies:
+  - base >= 4.7 && < 5
+  - mtl
+  - cmdargs
+  - containers
+  - process
+
+spec-version: 0.36.0
+
+ghc-options:
+  - -Wall
+  - -Wcompat
+  - -Widentities
+  - -Wincomplete-uni-patterns
+  - -Wincomplete-record-updates
+  - -Wmissing-export-lists
+  - -Wpartial-fields
+  - -Wredundant-constraints
+  - -fhide-source-paths
+  - -freverse-errors
+
+library:
+  source-dirs: src
+  dependencies:
+    - array
+  build-tools:
+    - alex
+    - happy
+
+executables:
+  {{name}}-exe:
+    main: Main.hs
+    source-dirs: app
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+    dependencies:
+      - {{name}}
+
+tests:
+  {{name}}-test:
+    main: Spec.hs
+    source-dirs: test
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+    dependencies:
+      - {{name}}
+      - hspec
+      - QuickCheck
+    build-tools:
+      - hspec-discover
+
+{-# START_FILE src/AST.hs #-}
+{- |
+Module       : AST
+Description  : Intermediate representation for the program
+-}
+module AST
+    ( AST (..)
+    ) where
+
+
+data AST = AST
+
+{-# START_FILE src/Args.hs #-}
+{-# LANGUAGE DeriveDataTypeable #-}
+
+module Args
+    ( Options (..)
+    , defaultOptions
+    , options
+    ) where
+
+import           Data.Data              (Data, Typeable)
+
+import           System.Console.CmdArgs (argPos, def, help, name, program, summary, typ,
+                                         (&=))
+
+-- | Data structure to hold command line options
+data Options
+  = Options
+      { input       :: String
+        -- ^ The string to process
+      , printTokens :: Bool
+        -- ^ Whether to print the token list
+      , printAst    :: Bool
+        -- ^ Whether to print the AST
+      , optimizeAst :: Bool
+        -- ^ Whether to optimize the AST
+      , showState   :: Bool
+        -- ^ Whether to show the compiler state at the end of the program
+      }
+  deriving (Data, Eq, Show, Typeable)
+
+-- | Command line options
+options :: Options
+options =
+    Options
+        { input = def &= argPos 0 &= typ "INPUT"
+        , printTokens = False &= name "t" &= help "Print the token list"
+        , printAst = False &= name "a" &= help "Print the AST"
+        , optimizeAst = False &= name "o" &= help "Optimize the AST"
+        , showState = False &= name "s" &= help "Show the compiler state at the end of the program"
+        }
+        &= program "hmc"
+        &= summary "hmc - a human-made compiler"
+
+-- | Default options
+defaultOptions :: Options
+defaultOptions =
+    Options
+        { input = ""
+        , printTokens = False
+        , printAst = False
+        , optimizeAst = False
+        , showState = False
+        }
+
+{-# START_FILE src/CompilerMonad.hs #-}
+{- |
+Module       : CompilerMonad
+Description  : The compiler's type, and a function for running the compiler
+-}
+module CompilerMonad
+    ( CompilerM
+    , runCompilerM
+    , throwError
+    , (>=>)
+    ) where
+
+import           CompilerTypes        (CompilerContext, CompilerError, CompilerLog,
+                                       CompilerState)
+
+import           Control.Monad        ((>=>))
+import           Control.Monad.Except (ExceptT, runExceptT, throwError)
+import           Control.Monad.RWS    (RWST, runRWST)
+
+-----------------------------------------------------------------------------------------
+-- | Definition of the compiler monad
+--
+--  - Except: error handling
+--  - Reader: immutable CompilerContext
+--  - Writer: accumulated LogEntries
+--  - State: mutable CompilerState
+--  - IO: for file I/O and other side effects
+--
+-- Using RWST to combine Reader, Writer, and State into a single transformer
+-----------------------------------------------------------------------------------------
+type CompilerM = ExceptT CompilerError (RWST CompilerContext CompilerLog CompilerState IO)
+
+-- | Run the compiler monad with a given context and initial state
+runCompilerM :: CompilerContext -> CompilerState -> (a -> CompilerM b) -> a -> IO (Either CompilerError (b, CompilerState), CompilerLog)
+runCompilerM context state m input = do
+    (result, finalState, finalLog) <- runRWST (runExceptT (m input)) context state
+    return $ case result of
+        Left err    -> (Left err, finalLog)
+        Right value -> (Right (value, finalState), finalLog)
+
+{-# START_FILE src/CompilerTypes.hs #-}
+{- |
+Module       : CompilerTypes
+Description  : Definitions of types used by the compiler monad
+-}
+module CompilerTypes
+    ( CompilerContext (..)
+    , CompilerError
+    , CompilerLog
+    , CompilerResult
+    , CompilerState (..)
+    , LogEntry
+    , buildContext
+    , defaultCompilerContext
+    , defaultCompilerState
+    ) where
+
+import           Args (Options (..), defaultOptions, input)
+
+-----------------------------------------------------------------------------------------
+-- Context (readable)
+-----------------------------------------------------------------------------------------
+
+-- | Stores information that the compiler can use to do its work
+data CompilerContext
+  = CompilerContext
+      { configInputStr :: String
+        -- ^ The input string to compile
+      , configOptions  :: Options
+        -- ^ The compiler options
+      }
+  deriving (Eq, Show)
+
+-- | A default, empty context
+defaultCompilerContext :: CompilerContext
+defaultCompilerContext =
+  CompilerContext
+    { configInputStr = ""
+    , configOptions = defaultOptions
+    }
+
+-- | Build a 'CompilerContext' from command line 'Options'
+buildContext :: Options -> CompilerContext
+buildContext opts =
+  CompilerContext
+    { configInputStr = input opts
+    , configOptions = opts
+    }
+
+-----------------------------------------------------------------------------------------
+-- The result of the compiler
+-----------------------------------------------------------------------------------------
+
+-- | This compiler produces no value. Instead, it creates files.
+type CompilerResult = ()
+
+-----------------------------------------------------------------------------------------
+-- State (writeable)
+-----------------------------------------------------------------------------------------
+
+-- | Information the compiler can read and write
+--
+--  NOTE: For this compiler, we probably don't need any state, so this is an empty data
+--  structure. You can change this, though, if you would like to keep track of some state!
+data CompilerState = CompilerState
+  deriving (Eq, Show)
+
+-- | The default initial compiler state
+defaultCompilerState :: CompilerState
+defaultCompilerState =
+  CompilerState
+
+-----------------------------------------------------------------------------------------
+-- Logging
+-----------------------------------------------------------------------------------------
+
+-- | A log for the compiler to write to
+type CompilerLog = [LogEntry]
+
+-- | An entry in the log
+type LogEntry = String
+
+-----------------------------------------------------------------------------------------
+-- Errors
+-----------------------------------------------------------------------------------------
+
+-- | A compiler error
+type CompilerError = String
+
+{-# START_FILE src/Lexer.x #-}
+{
+{- |
+Module       : Lexer
+Description  : The auto-generated lexer module using Alex.
+-}
+module Lexer (tokenize) where
+
+import Tokens (Token(..))
+}
+
+%wrapper "basic"
+
+-- Token definitions
+tokens :-
+  $white+  ; -- ignore whitespace
+  
+  -- TODO: Add token definitions here.
+
+{
+
+-- | Monadic tokenizer function
+tokenize :: String -> [Token]
+tokenize = alexScanTokens
+
+}
+
+{-# START_FILE src/Optimizer.hs #-}
+{- |
+Module       : Optimizer
+Description  : Optimizes the program
+-}
+module Optimizer
+    ( optimize
+    ) where
+
+import           AST (AST (..))
+
+-- | Optimize the program
+optimize :: AST -> AST
+optimize ast = ast   -- a default implementation
+
+{-# START_FILE src/Parser.y #-}
+{
+{- |
+Module       : Parser
+Description  : The auto-generated parser using Happy.
+-}
+module Parser (parser) where
+import Lexer (tokenize)
+import Tokens (Token(..))
+import AST (AST(..))
+import CompilerMonad (CompilerM, throwError)
+}
+
+-- Parser configuration
+%name parser
+%tokentype { Token }
+%error { parseError }
+%monad { CompilerM }
+
+-- Token declarations
+%token
+  -- TODO: Replace with your token definitions.
+  TERMINAL       { Token }
+%%
+
+-- Grammar
+-- TODO: Replace with your grammar rules.
+G : TERMINAL { undefined }
+
+-- Additional code
+{
+
+-- Parse error using CompilerM
+parseError :: [Token] -> CompilerM a
+parseError tokens = throwError "Parse error"   -- a terrible error message!
+
+}
+
+{-# START_FILE src/Phases.hs #-}
+{- |
+Module       : Phases
+Description  : Definitions of the phases of the compiler
+-}
+module Phases
+    ( emitPhase
+    , optimizePhase
+    , parsePhase
+    , phases
+    , tokenizePhase
+    ) where
+
+import           AST           (AST (..))
+
+import           CompilerMonad (CompilerM, (>=>))
+
+import           CompilerTypes (CompilerResult)
+
+import           Tokens        (Token)
+
+-- | The compilation phases
+phases :: String -> CompilerM CompilerResult
+phases = tokenizePhase >=> parsePhase >=> optimizePhase >=> emitPhase
+
+-- | Tokenization phase
+tokenizePhase :: String -> CompilerM [Token]
+tokenizePhase _ = return [] -- placeholder implementation
+
+-- | Parsing phase
+parsePhase :: [Token] -> CompilerM AST
+parsePhase _ = return undefined-- placeholder implementation
+
+-- | Optimization phase
+optimizePhase :: AST -> CompilerM AST
+optimizePhase ast = return  ast -- placeholder implementation
+
+-- | Compilation phase
+emitPhase :: AST -> CompilerM CompilerResult
+emitPhase _ = return undefined -- placeholder implementation
+
+{-# START_FILE src/Tokens.hs #-}
+{- |
+Module       : Tokens
+Description  : Definitions of data structures to represent the lexer's tokens
+-}
+module Tokens
+    ( Token (..)
+    ) where
+
+-- | Tokens
+data Token = Token
+  deriving (Eq, Show)
+
+{-# START_FILE stack.yaml #-}
+# This file was automatically generated by 'stack init'
+#
+# Some commonly used options have been documented as comments in this file.
+# For advanced use and comprehensive documentation of the format, please see:
+# https://docs.haskellstack.org/en/stable/configure/yaml/
+
+# A 'specific' Stackage snapshot or a compiler version.
+# A snapshot resolver dictates the compiler version and the set of packages
+# to be used for project dependencies. For example:
+#
+# snapshot: lts-23.24
+# snapshot: nightly-2025-06-15
+# snapshot: ghc-9.8.4
+#
+# The location of a snapshot can be provided as a file or url. Stack assumes
+# a snapshot provided as a file might change, whereas a url resource does not.
+#
+# snapshot: ./custom-snapshot.yaml
+# snapshot: https://example.com/snapshots/2024-01-01.yaml
+snapshot: lts-22.44
+
+# User packages to be built.
+# Various formats can be used as shown in the example below.
+#
+# packages:
+# - some-directory
+# - https://example.com/foo/bar/baz-0.0.2.tar.gz
+#   subdirs:
+#   - auto-update
+#   - wai
+packages:
+  - .
+# Dependency packages to be pulled from upstream that are not in the snapshot.
+# These entries can reference officially published versions as well as
+# forks / in-progress versions pinned to a git hash. For example:
+#
+# extra-deps:
+# - acme-missiles-0.3
+# - git: https://github.com/commercialhaskell/stack.git
+#   commit: e7b331f14bcffb8367cd58fbfc8b40ec7642100a
+#
+# extra-deps: []
+
+# Override default flag values for project packages and extra-deps
+# flags: {}
+
+# Extra package databases containing global packages
+# extra-package-dbs: []
+
+# Control whether we use the GHC we find on the path
+system-ghc: true
+#
+# Require a specific version of Stack, using version ranges
+# require-stack-version: -any # Default
+# require-stack-version: ">=3.7"
+#
+# Override the architecture used by Stack, especially useful on Windows
+# arch: i386
+# arch: x86_64
+#
+# Extra directories used by Stack for building
+# extra-include-dirs: [/path/to/dir]
+# extra-lib-dirs: [/path/to/dir]
+#
+# Allow a newer minor version of GHC than the snapshot specifies
+# compiler-check: newer-minor
+
+{-# START_FILE stack.yaml.lock #-}
+# This file was autogenerated by Stack.
+# You should not edit this file by hand.
+# For more information, please see the documentation at:
+#   https://docs.haskellstack.org/en/stable/topics/lock_files
+
+packages: []
+snapshots:
+- completed:
+    sha256: 238fa745b64f91184f9aa518fe04bdde6552533d169b0da5256670df83a0f1a9
+    size: 721141
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/22/44.yaml
+  original: lts-22.44
+
+{-# START_FILE test/ParserSpec.hs #-}
+{-# OPTIONS_GHC -Wno-unused-imports -Wno-unused-top-binds #-}
+{- |
+Module       : ParserSpec
+Description  : Tests for the parser
+-}
+module ParserSpec
+    ( spec
+    ) where
+
+
+import           AST           (AST (..))
+
+import           CompilerMonad (runCompilerM, (>=>))
+
+import           CompilerTypes (CompilerContext (..), defaultCompilerContext,
+                                defaultCompilerState)
+
+import           Phases        (parsePhase, tokenizePhase)
+
+import           Test.Hspec    (Spec, describe, it, pendingWith, shouldBe)
+
+
+-- | Helper function to run the parser in the CompilerMonad and extract the result
+--
+--   You can use this function in your tests, like so:
+--
+--    it "parses addition" $ do
+--      result <- runParserIO "1 + 2"
+--      result `shouldBe` Right (Plus (Int 1) (Int 2
+--
+runParserIO :: String -> IO (Either String AST)
+runParserIO input = do
+    let context = defaultCompilerContext { configInputStr = input }
+    let state = defaultCompilerState
+    (result, _) <- runCompilerM context state (tokenizePhase >=> parsePhase) input
+    return $ case result of
+      Left err       -> Left err
+      Right (ast, _) -> Right ast
+
+-----------------------------------------------------------------------------------------
+-- Tests
+-----------------------------------------------------------------------------------------
+spec :: Spec
+spec = do
+  describe "parsing" $ do
+    it "TODO: Implement tests for parsing" $ do
+      pendingWith "Parser tests not implemented yet"
+
+{-# START_FILE test/Spec.hs #-}
+{-# OPTIONS_GHC -F -pgmF hspec-discover #-}
+
+
+{-# START_FILE test/TokenSpec.hs #-}
+{-# OPTIONS_GHC -Wno-unused-imports -Wno-unused-top-binds #-}
+{- |
+Module       : TokenSpec
+Description  : Tests for the tokenizer
+-}
+module TokenSpec
+    ( spec
+    ) where
+
+
+import           CompilerMonad (runCompilerM, (>=>))
+
+import           CompilerTypes (CompilerContext (..), defaultCompilerContext,
+                                defaultCompilerState)
+
+import           Lexer         (tokenize)
+
+import           Test.Hspec    (Spec, describe, it, pendingWith, shouldBe)
+
+import           Tokens        (Token (..))
+
+-----------------------------------------------------------------------------------------
+-- Tests
+-----------------------------------------------------------------------------------------
+spec :: Spec
+spec = do
+  describe "tokenize" $ do
+    it "TODO: Implement tests for tokenization" $ do
+      pendingWith "Tokenization tests not implemented yet"
