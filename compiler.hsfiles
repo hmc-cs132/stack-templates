@@ -641,28 +641,28 @@ main = do
     case result of
         Left errMsg -> putStrLn $ "Compilation failed: " ++ errMsg
         Right (output, _) -> do
-            putStrLn output
+            putStrLn $ "Compilation succeeded: " ++ output
 
 {-# START_FILE hie.yaml #-}
 cradle:
   stack:
     - path: "./src"
-      component: "{{name}}:lib"
+      component: "hmc:lib"
 
     - path: "./app"
-      component: "{{name}}:exe:{{name}}-exe"
+      component: "hmc:exe:hmc-exe"
 
     - path: "./test"
-      component: "{{name}}:test:{{name}}-test"
+      component: "hmc:test:hmc-test"
 
-{-# START_FILE {{name}}.cabal #-}
+{-# START_FILE hmc.cabal #-}
 cabal-version: 1.12
 
 -- This file has been generated from package.yaml by hpack version 0.38.1.
 --
 -- see: https://github.com/sol/hpack
 
-name:           {{name}}
+name:           hmc
 version:        0.0.0
 description:    Please see the README file
 author:         Author name here
@@ -674,14 +674,9 @@ extra-source-files:
 library
   exposed-modules:
       Args
-      AST
       CompilerMonad
       CompilerTypes
-      Lexer
-      Optimizer
-      Parser
       Phases
-      Tokens
   hs-source-dirs:
       src
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-uni-patterns -Wincomplete-record-updates -Wmissing-export-lists -Wpartial-fields -Wredundant-constraints -fhide-source-paths -freverse-errors
@@ -697,7 +692,7 @@ library
     , process
   default-language: Haskell2010
 
-executable {{name}}-exe
+executable hmc-exe
   main-is: Main.hs
   hs-source-dirs:
       app
@@ -706,16 +701,15 @@ executable {{name}}-exe
       base >=4.7 && <5
     , cmdargs
     , containers
-    , {{name}}
+    , hmc
     , mtl
     , process
   default-language: Haskell2010
 
-test-suite {{name}}-test
+test-suite hmc-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
-      ParserSpec
       TokenSpec
   hs-source-dirs:
       test
@@ -727,15 +721,15 @@ test-suite {{name}}-test
     , base >=4.7 && <5
     , cmdargs
     , containers
+    , hmc
     , hspec
-    , {{name}}
     , mtl
     , process
   default-language: Haskell2010
 
 {-# START_FILE package.yaml #-}
 # cspell: disable
-name: {{name}}
+name: hmc
 author: "Author name here"
 
 extra-source-files:
@@ -776,7 +770,7 @@ library:
     - happy
 
 executables:
-  {{name}}-exe:
+  hmc-exe:
     main: Main.hs
     source-dirs: app
     ghc-options:
@@ -784,10 +778,10 @@ executables:
       - -rtsopts
       - -with-rtsopts=-N
     dependencies:
-      - {{name}}
+      - hmc
 
 tests:
-  {{name}}-test:
+  hmc-test:
     main: Spec.hs
     source-dirs: test
     ghc-options:
@@ -795,23 +789,11 @@ tests:
       - -rtsopts
       - -with-rtsopts=-N
     dependencies:
-      - {{name}}
+      - hmc
       - hspec
       - QuickCheck
     build-tools:
       - hspec-discover
-
-{-# START_FILE src/AST.hs #-}
-{- |
-Module       : AST
-Description  : Intermediate representation for the program
--}
-module AST
-    ( AST (..)
-    ) where
-
-
-data AST = AST
 
 {-# START_FILE src/Args.hs #-}
 {-# LANGUAGE DeriveDataTypeable #-}
@@ -996,139 +978,22 @@ type LogEntry = String
 -- | A compiler error
 type CompilerError = String
 
-{-# START_FILE src/Lexer.x #-}
-{
-{- |
-Module       : Lexer
-Description  : The auto-generated lexer module using Alex.
--}
-module Lexer (tokenize) where
-
-import Tokens (Token(..))
-}
-
-%wrapper "basic"
-
--- Token definitions
-tokens :-
-  $white+  ; -- ignore whitespace
-  
-  -- TODO: Add token definitions here.
-
-{
-
--- | Monadic tokenizer function
-tokenize :: String -> [Token]
-tokenize = alexScanTokens
-
-}
-
-{-# START_FILE src/Optimizer.hs #-}
-{- |
-Module       : Optimizer
-Description  : Optimizes the program
--}
-module Optimizer
-    ( optimize
-    ) where
-
-import           AST (AST (..))
-
--- | Optimize the program
-optimize :: AST -> AST
-optimize ast = ast   -- a default implementation
-
-{-# START_FILE src/Parser.y #-}
-{
-{- |
-Module       : Parser
-Description  : The auto-generated parser using Happy.
--}
-module Parser (parser) where
-import Lexer (tokenize)
-import Tokens (Token(..))
-import AST (AST(..))
-import CompilerMonad (CompilerM, throwError)
-}
-
--- Parser configuration
-%name parser
-%tokentype { Token }
-%error { parseError }
-%monad { CompilerM }
-
--- Token declarations
-%token
-  -- TODO: Replace with your token definitions.
-  TERMINAL       { Token }
-%%
-
--- Grammar
--- TODO: Replace with your grammar rules.
-G : TERMINAL { undefined }
-
--- Additional code
-{
-
--- Parse error using CompilerM
-parseError :: [Token] -> CompilerM a
-parseError tokens = throwError "Parse error"   -- a terrible error message!
-
-}
-
 {-# START_FILE src/Phases.hs #-}
 {- |
 Module       : Phases
 Description  : Definitions of the phases of the compiler
 -}
 module Phases
-    ( emitPhase
-    , optimizePhase
-    , parsePhase
-    , phases
-    , tokenizePhase
+    ( phases
     ) where
 
-import           AST           (AST (..))
-
-import           CompilerMonad (CompilerM, (>=>))
+import           CompilerMonad (CompilerM)
 
 import           CompilerTypes (CompilerResult)
 
-import           Tokens        (Token)
-
 -- | The compilation phases
 phases :: String -> CompilerM CompilerResult
-phases = tokenizePhase >=> parsePhase >=> optimizePhase >=> emitPhase
-
--- | Tokenization phase
-tokenizePhase :: String -> CompilerM [Token]
-tokenizePhase _ = return [] -- placeholder implementation
-
--- | Parsing phase
-parsePhase :: [Token] -> CompilerM AST
-parsePhase _ = return undefined-- placeholder implementation
-
--- | Optimization phase
-optimizePhase :: AST -> CompilerM AST
-optimizePhase ast = return  ast -- placeholder implementation
-
--- | Compilation phase
-emitPhase :: AST -> CompilerM CompilerResult
-emitPhase _ = return undefined -- placeholder implementation
-
-{-# START_FILE src/Tokens.hs #-}
-{- |
-Module       : Tokens
-Description  : Definitions of data structures to represent the lexer's tokens
--}
-module Tokens
-    ( Token (..)
-    ) where
-
--- | Tokens
-data Token = Token
-  deriving (Eq, Show)
+phases = return
 
 {-# START_FILE stack.yaml #-}
 # This file was automatically generated by 'stack init'
@@ -1212,58 +1077,8 @@ snapshots:
     url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/22/44.yaml
   original: lts-22.44
 
-{-# START_FILE test/ParserSpec.hs #-}
-{-# OPTIONS_GHC -Wno-unused-imports -Wno-unused-top-binds #-}
-{- |
-Module       : ParserSpec
-Description  : Tests for the parser
--}
-module ParserSpec
-    ( spec
-    ) where
-
-
-import           AST           (AST (..))
-
-import           CompilerMonad (runCompilerM, (>=>))
-
-import           CompilerTypes (CompilerContext (..), defaultCompilerContext,
-                                defaultCompilerState)
-
-import           Phases        (parsePhase, tokenizePhase)
-
-import           Test.Hspec    (Spec, describe, it, pendingWith, shouldBe)
-
-
--- | Helper function to run the parser in the CompilerMonad and extract the result
---
---   You can use this function in your tests, like so:
---
---    it "parses addition" $ do
---      result <- runParserIO "1 + 2"
---      result `shouldBe` Right (Plus (Int 1) (Int 2
---
-runParserIO :: String -> IO (Either String AST)
-runParserIO input = do
-    let context = defaultCompilerContext { configInputStr = input }
-    let state = defaultCompilerState
-    (result, _) <- runCompilerM context state (tokenizePhase >=> parsePhase) input
-    return $ case result of
-      Left err       -> Left err
-      Right (ast, _) -> Right ast
-
------------------------------------------------------------------------------------------
--- Tests
------------------------------------------------------------------------------------------
-spec :: Spec
-spec = do
-  describe "parsing" $ do
-    it "TODO: Implement tests for parsing" $ do
-      pendingWith "Parser tests not implemented yet"
-
 {-# START_FILE test/Spec.hs #-}
 {-# OPTIONS_GHC -F -pgmF hspec-discover #-}
-
 
 {-# START_FILE test/TokenSpec.hs #-}
 {-# OPTIONS_GHC -Wno-unused-imports -Wno-unused-top-binds #-}
@@ -1276,16 +1091,7 @@ module TokenSpec
     ) where
 
 
-import           CompilerMonad (runCompilerM, (>=>))
-
-import           CompilerTypes (CompilerContext (..), defaultCompilerContext,
-                                defaultCompilerState)
-
-import           Lexer         (tokenize)
-
 import           Test.Hspec    (Spec, describe, it, pendingWith, shouldBe)
-
-import           Tokens        (Token (..))
 
 -----------------------------------------------------------------------------------------
 -- Tests
